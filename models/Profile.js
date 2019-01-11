@@ -32,7 +32,7 @@ const ProfileSchema = new Schema({
   bio: {
     type: String
   },
-  github: {
+  githubusername: {
     type: String
   },
   experience: [
@@ -97,23 +97,23 @@ const ProfileSchema = new Schema({
   social: {
     youtube: {
       type: String,
-      required: true
+      // required: true
     },
     twitter: {
       type: String,
-      required: true
+      // required: true
     },
     facebook: {
       type: String,
-      required: true
+      // required: true
     },
     linkedin: {
       type: String,
-      required: true
+      // required: true
     },
     instagram: {
       type: String,
-      required: true
+      // required: true
     },
   },
   date: {
