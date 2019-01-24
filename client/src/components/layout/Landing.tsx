@@ -3,15 +3,13 @@ import {connect} from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-import {CustomProps} from '../@interface/customProps'
+import Geneva from '../../images/geneva.jpg'
 
 
 type Styles = {
     root: any,
-    grow: any,
-    menuItem: any,
     title: any,
+    toolbar: any,
     button: any
 }
 
@@ -20,17 +18,25 @@ interface NavbarProps { classes: Styles }
 const styles = {
     root: {
         display: 'flex',
-        flexFlow: 'column nowrap'
+        flexFlow: 'column nowrap',
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundImage: `url(${Geneva})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat'
     },
-    grow: {
-        flexGrow: 1
+    title: {
+        marginTop: "20%",
+        marginBottom: 0
     },
     toolbar: {
         display: 'flex',
         justifyContent: 'center'
     },
     button: {
-
+        marginRight: 26
     }
 };
 
@@ -38,16 +44,18 @@ class Landing extends Component<NavbarProps, {}> {
     render() {
         const {classes} = this.props;
         return (
-            <Fragment>
+            <div className={classes.root}>
+                <h1 className={classes.title}>Developer Connector</h1>
+                <h6>Create a developer portfolio, share posts and get help from other developers</h6>
                 <div>
                     <Button variant="contained" className={classes.button}>
                         Sign Up
                     </Button>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    <Button variant="contained" color="primary">
                         Login
                     </Button>
                 </div>
-            </Fragment>
+            </div>
         );
     }
 }

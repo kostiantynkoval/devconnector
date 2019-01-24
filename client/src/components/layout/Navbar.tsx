@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,7 +10,7 @@ import Button from '@material-ui/core/Button';
 
 const styles = {
     root: {
-        flexGrow: 1,
+        //flexGrow: 1,
     },
     grow: {
         flexGrow: 1,
@@ -20,6 +21,10 @@ const styles = {
     },
     title: {
         marginRight: 20,
+        cursor: 'pointer'
+    },
+    button: {
+        marginLeft: 8
     }
 };
 
@@ -27,27 +32,35 @@ type Styles = {
     root: any,
     grow: any,
     menuItem: any,
-    title: any
+    title: any,
+    button: any
 }
 
 interface NavbarProps { classes: Styles }
 
+class Navbar extends Component<RouteComponentProps & NavbarProps, {}> {
 
-class Navbar extends Component<NavbarProps, {}> {
+    pushTo = (to: string) => {
+        const { history, location } = this.props;
+        if(location.pathname === to) return;
+        history.push(to);
+    }
+
     render() {
+        console.log(this.props);
         const {classes} = this.props;
         return (
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="h5" color="inherit" className={classes.title}>
+                        <Typography onClick={() => this.pushTo("/")} variant="h5" color="inherit" className={classes.title}>
                             News1
                         </Typography>
                         <Button color="inherit" className={classes.menuItem}>Menu1</Button>
                         <Button color="inherit" className={classes.menuItem}>Menu2</Button>
                         <div className={classes.grow}/>
-                        <Button color="inherit">Sign Up</Button>
-                        <Button color="inherit">Login</Button>
+                        <Button onClick={() => this.pushTo("/register")} color="inherit" className={classes.button}>Register</Button>
+                        <Button onClick={() => this.pushTo("/login")} color="inherit" className={classes.button}>Login</Button>
                     </Toolbar>
                 </AppBar>
             </div>
@@ -62,5 +75,5 @@ class Navbar extends Component<NavbarProps, {}> {
 // export default connect(
 //     mapStateToProps,
 // )(Navbar);
-export default withStyles(styles)(Navbar);
+export default withStyles(styles)(withRouter(Navbar));
 

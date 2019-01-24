@@ -35,8 +35,8 @@ const Footer = ({classes}: Pick<NavbarProps, 'classes'>) =>
         <div className={classes.grow}/>
         <AppBar position="static">
             <Toolbar className={classes.toolbar}>
-                <Typography variant="h6" color="inherit">
-                    Copyright &copy; {new Date().getFullYear()} DevConnector
+                <Typography variant="body2" color="inherit">
+                    Copyright&copy; {new Date().getFullYear()} DevConnector
                 </Typography>
             </Toolbar>
         </AppBar>
