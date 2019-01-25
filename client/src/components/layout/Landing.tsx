@@ -1,21 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
-import { withStyles } from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import Geneva from '../../images/geneva.jpg'
 
 
-type Styles = {
-    root: any,
-    title: any,
-    toolbar: any,
-    button: any
-}
-
-interface NavbarProps { classes: Styles }
-
-const styles = {
+const styles = createStyles({
     root: {
         display: 'flex',
         flexFlow: 'column nowrap',
@@ -38,9 +30,9 @@ const styles = {
     button: {
         marginRight: 26
     }
-};
+});
 
-class Landing extends Component<NavbarProps, {}> {
+class Landing extends Component<WithStyles, {}> {
     render() {
         const {classes} = this.props;
         return (

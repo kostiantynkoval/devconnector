@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
-import {withStyles} from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-const styles = {
+const styles = createStyles({
     root: {
         display: 'flex',
         flexFlow: 'column nowrap'
@@ -18,18 +19,9 @@ const styles = {
         display: 'flex',
         justifyContent: 'center'
     }
-};
+});
 
-type Styles = {
-    grow: any,
-    root: any,
-    toolbar: any
-}
-
-
-interface NavbarProps { classes: Styles }
-
-const Footer = ({classes}: Pick<NavbarProps, 'classes'>) =>
+const Footer = ({classes}: WithStyles) =>
 (
     <div className={classes.root}>
         <div className={classes.grow}/>

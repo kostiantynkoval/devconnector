@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-import { withStyles } from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const styles = {
+const styles = createStyles({
     root: {
         //flexGrow: 1,
     },
@@ -26,19 +27,9 @@ const styles = {
     button: {
         marginLeft: 8
     }
-};
+});
 
-type Styles = {
-    root: any,
-    grow: any,
-    menuItem: any,
-    title: any,
-    button: any
-}
-
-interface NavbarProps { classes: Styles }
-
-class Navbar extends Component<RouteComponentProps & NavbarProps, {}> {
+class Navbar extends Component<RouteComponentProps & WithStyles, {}> {
 
     pushTo = (to: string) => {
         const { history, location } = this.props;
@@ -46,15 +37,14 @@ class Navbar extends Component<RouteComponentProps & NavbarProps, {}> {
         history.push(to);
     }
 
-    render() {
-        console.log(this.props);
+    render() {;
         const {classes} = this.props;
         return (
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
                         <Typography onClick={() => this.pushTo("/")} variant="h5" color="inherit" className={classes.title}>
-                            News1
+                            DevConnector
                         </Typography>
                         <Button color="inherit" className={classes.menuItem}>Menu1</Button>
                         <Button color="inherit" className={classes.menuItem}>Menu2</Button>
