@@ -1,20 +1,17 @@
-
 import { combineReducers, Reducer } from 'redux';
-import {TestState, testReducer} from './test'
+import {AuthState, authReducer} from './authReducer'
+import {ErrorState, errorReducer} from './errorReducer'
 
 
 
 interface ApplicationState {
-    test: TestState;
-    // layout: LayoutState
+    auth: AuthState;
+    errors: ErrorState;
 }
 
 const rootReducer: Reducer<ApplicationState> = combineReducers<ApplicationState>({
-    // router: routerReducer,
-    test: testReducer,
-    // layout: layoutReducer,
+    auth: authReducer,
+    errors: errorReducer
 });
-
-console.log(testReducer)
 
 export default rootReducer;

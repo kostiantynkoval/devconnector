@@ -13,7 +13,6 @@ import './App.css';
 
 class App extends Component {
     render() {
-        console.log('store', store)
         return (
             <Provider store={store}>
                 <Router>
