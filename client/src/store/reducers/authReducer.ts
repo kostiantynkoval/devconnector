@@ -1,5 +1,10 @@
-import { Reducer } from 'redux'
-import {REGISTER, REGISTER_SUCCESS, REGISTER_FAIL} from '../actionTypes'
+import { Reducer } from 'redux';
+import {
+    REGISTER, REGISTER_SUCCESS, REGISTER_FAIL,
+    LOGIN, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT,
+    SET_USER
+} from '../actionTypes';
+import isEmpty from '../../utils/isEmpty';
 
 export interface AuthState {
     user: any,
@@ -19,11 +24,29 @@ const initialState: AuthState = {
 const authReducer: Reducer<any> = (state = initialState, action) => {
     switch (action.type) {
         case REGISTER:
-            return { ...state, loading: true }
+        case LOGIN:
+            return {
+                ...state,
+                loading: true
+            };
         case REGISTER_SUCCESS:
-            return { ...state, user: action.payload, isAuthenticated: true, loading: false }
         case REGISTER_FAIL:
-            return { ...state, user: {}, isAuthenticated: false, loading: false }
+        case LOGIN_FAIL:
+        case LOGOUT:
+            return {
+                ...state,
+                user: {},
+                isAuthenticated: false,
+                loading: false
+            };
+        case LOGIN_SUCCESS:
+        case SET_USER:
+            return {
+                ...state,
+                isAuthenticated: !isEmpty(action.payload),
+                user: action.payload,
+                loading: false
+            };
         default: {
             return state
         }

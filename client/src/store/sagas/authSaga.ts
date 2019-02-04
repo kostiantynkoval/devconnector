@@ -7,9 +7,15 @@ import {
     LOGIN, LOGIN_SUCCESS, LOGIN_FAIL
 } from '../actionTypes';
 import { RegistrationData } from '../../components/auth/Register';
+import { LoginData } from '../../components/auth/Login';
 
 interface RegistrationPayload {
     data: RegistrationData;
+    history: any
+}
+
+interface LoginPayload {
+    data: LoginData;
     history: any
 }
 
@@ -19,7 +25,7 @@ export function* initRegistration(action: {type: string, payload: RegistrationPa
     try {
         const res = yield call<any>(registerUser, action.payload.data)
         yield put({ type: REGISTER_SUCCESS, payload: res.data })
-        return call(action.payload.history.push, '/login')
+        yield call(action.payload.history.push, '/login')
     } catch (e) {
         yield put({ type: REGISTER_FAIL, payload: e.response ? e.response.data : null })
     }
@@ -35,16 +41,17 @@ function registerUser(data: any) {
 // Login Saga
 export function* initLogin(action: {type: string, payload: RegistrationPayload}):any {
     try {
-        const res = yield call<any>(loginUser, action.payload.data)
+        const res = yield call<any>(loginUser, action.payload.data);
         const { token } = res.data;
-        //localStorage.setItem('token', res.data.token);
+        // Set token to Local Stirage
+        localStorage.setItem('token', token);
         // Set Authorization header in axios
         setAuthToken(token);
         // Decode JWT Token
         const decodedUser = jwt_decode(token);
         // Dispatch decoded user data
         yield put({ type: LOGIN_SUCCESS, payload: decodedUser })
-        return call(action.payload.history.push, '/')
+        yield call(action.payload.history.push, '/')
     } catch (e) {
         yield put({ type: LOGIN_FAIL, payload: e.response ? e.response.data : null })
     }
@@ -52,7 +59,7 @@ export function* initLogin(action: {type: string, payload: RegistrationPayload})
 }
 // Register query
 function loginUser(data: any) {
-    return axios.post(`${process.env.REACT_APP_URL_USERS}/register`, data)
+    return axios.post(`${process.env.REACT_APP_URL_USERS}/login`, data)
 
 }
 

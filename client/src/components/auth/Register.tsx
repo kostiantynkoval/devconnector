@@ -7,6 +7,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {REGISTER} from '../../store/actionTypes';
+import { validateForm } from '../../utils/formValidation'
 
 const styles = createStyles({
     root: {
@@ -40,20 +41,8 @@ export interface RegistrationData {
 }
 
 interface RegisterState {
-    data: {
-        name: string;
-        email: string;
-        password: string;
-        password2: string;
-        [key: string]: string;
-    },
-    errors: {
-        name: string;
-        email: string;
-        password: string;
-        password2: string;
-        [key: string]: string;
-    }
+    data: RegistrationData,
+    errors: RegistrationData
 }
 
 class Register extends Component<WithStyles & DispatchProps & StateProps & RouteComponentProps, RegisterState> {
@@ -86,7 +75,7 @@ class Register extends Component<WithStyles & DispatchProps & StateProps & Route
                 this.props.errors[key] !== prevProps.errors[key] &&
                 this.props.errors[key] !== prevState.errors[key]
             ) {
-                newState.errors[key] = this.props.errors[key]
+                newState.errors[key] = this.props.errors[key];
                 propsChanged = true;
             }
         })
@@ -119,70 +108,21 @@ class Register extends Component<WithStyles & DispatchProps & StateProps & Route
     onSubmit = async (e: React.FormEvent<EventTarget>) => {
         e.preventDefault();
 
-        // Define array that will store each falsy check
-        const checkResults = [];
+        // Validating form
+        const { isValid, errors } = validateForm(this.state.data);
 
-        // Validating email address
-        const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(!emailReg.test(String(this.state.data.email).toLowerCase())) {
-            const emailErr = {
-                ...this.state.errors,
-                email: 'This email is not valid'
-            }
-            await this.setState({errors: emailErr})
-            checkResults.push(false);
+        if(isValid) {
+            // Emit Query Action
+            const data: RegistrationData = {
+                    name: this.state.data.name,
+                    email: this.state.data.email,
+                    password: this.state.data.password,
+                    password2: this.state.data.password2,
+                }
+            this.props.register(data, this.props.history);
+        } else {
+            this.setState({errors})
         }
-        console.log('EM',this.state.errors);
-
-        // Password validation (8-30 chars, 1 small, 1 capital, 1 number)
-        const passReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,30}$/;
-        if(!passReg.test(String(this.state.data.password))) {
-            const passwErr = {
-                ...this.state.errors,
-                password: 'Password should contain from 8 to 30 chars, at least 1 small letter, 1 number and 1 capital'
-            }
-            await this.setState({errors: passwErr})
-            checkResults.push(false);
-        }
-
-        // Password matching validation
-        if(this.state.data.password !== this.state.data.password2) {
-            const passw2Err = {
-                ...this.state.errors,
-                password2: 'Passwords should match'
-            }
-            await this.setState({errors: passw2Err})
-            checkResults.push(false);
-        }
-
-
-        // Checking each input for emptyness
-
-        // Define object with current errors state
-        const reqErr = {...this.state.errors};
-        Object.keys(reqErr).forEach((name: string) => {
-            if(this.state.data[name] === '') {
-                reqErr[name] = 'This field is required';
-                checkResults.push(false);
-            }
-        });
-        await this.setState({errors: reqErr});
-        console.log('reqErr', reqErr)
-
-        // If at least 1 check pushed false to array return false and abort submitting
-        if(checkResults.length > 0) return false;
-
-        // Data to send to the server
-        const data: RegistrationData = {
-            name: this.state.data.name,
-            email: this.state.data.email,
-            password: this.state.data.password,
-            password2: this.state.data.password2,
-        }
-
-        // Emit Query Action
-        this.props.register(data, this.props.history);
-
     }
 
     render() {

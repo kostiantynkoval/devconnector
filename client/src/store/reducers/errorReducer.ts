@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import {REGISTER, REGISTER_FAIL} from '../actionTypes'
+import {LOGIN, LOGIN_FAIL, REGISTER, REGISTER_FAIL} from '../actionTypes'
 
 export interface ErrorState {
     name: string;
@@ -20,12 +20,12 @@ const initialState: ErrorState = {
 // everything will remain type-safe.
 const errorReducer: Reducer<any> = (state = initialState, action) => {
     switch (action.type) {
-        case REGISTER: {
-            return { ...initialState }
-        }
-        case REGISTER_FAIL: {
+        case REGISTER:
+        case LOGIN:
+            return { ...initialState };
+        case REGISTER_FAIL:
+        case LOGIN_FAIL:
             return { ...state, ...action.payload }
-        }
         default: {
             return state
         }

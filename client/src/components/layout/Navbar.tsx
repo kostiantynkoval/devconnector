@@ -8,6 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import {LOGOUT} from "../../store/actionTypes";
 
 const styles = createStyles({
     root: {
@@ -58,12 +59,25 @@ class Navbar extends Component<RouteComponentProps & WithStyles, {}> {
     }
 }
 
-// function mapStateToProps(state: any) {
-//     return state;
+const mapStateToProps = (state: any) => ({
+    auth: state.auth
+})
+
+const dispatchStateToProps = (dispatch: any): DispatchProps => ({
+    logout: (history: any) => dispatch({type: LOGOUT})
+})
+
+interface DispatchProps {
+    logout: (history: any) => void
+}
+
+// interface StateProps {
+//     errors: RegistrationData
 // }
-//
-// export default connect(
-//     mapStateToProps,
-// )(Navbar);
-export default withStyles(styles)(withRouter(Navbar));
+
+export default connect(
+    mapStateToProps,
+    dispatchStateToProps
+)(withStyles(styles)(withRouter(Navbar)));
+
 
