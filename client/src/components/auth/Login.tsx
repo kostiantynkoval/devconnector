@@ -1,13 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {LOGIN} from '../../store/actionTypes';
+import { LOGIN } from '../../store/actionTypes';
 import { validateForm } from '../../utils/formValidation'
+import { createDeflateRaw } from "zlib";
 
 const styles = createStyles({
     root: {
@@ -44,7 +45,7 @@ interface LoginState {
     errors: LoginData
 }
 
-class Login extends Component<WithStyles & DispatchProps & StateProps & RouteComponentProps, LoginState> {
+export class Login extends Component<WithStyles & DispatchProps & StateProps & RouteComponentProps, LoginState> {
 
     constructor(props: WithStyles & DispatchProps & StateProps & RouteComponentProps){
         super(props)
@@ -65,7 +66,6 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
         // if there is errorObject in snapshot it will replace state.errors in componentDidMount
         const newState = {...this.state};
         let propsChanged = false;
-        console.log('prevState', prevState)
         Object.keys(prevState.errors).forEach((key: string) => {
             if(
                 this.props.errors[key] !== prevProps.errors[key] &&
@@ -73,7 +73,6 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
             ) {
                 newState.errors[key] = this.props.errors[key];
                 propsChanged = true;
-                console.log('changed')
             }
         })
         return propsChanged ? newState : null
@@ -85,7 +84,7 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
         }
     }
 
-    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const changedData = {
             data: {
                 ...this.state.data,
@@ -96,7 +95,7 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
                 [e.target.name]: ''
             }
         }
-        this.setState(changedData as Pick<LoginState, keyof LoginState>);
+        await this.setState(changedData as Pick<LoginState, keyof LoginState>);
     }
 
     onSubmit = async (e: React.FormEvent<EventTarget>) => {
@@ -111,12 +110,12 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
                 email: this.state.data.email,
                 password: this.state.data.password,
             }
+            console.log(this.props.login);
             this.props.login(data, this.props.history);
         } else {
             this.setState({errors})
         }
     }
-
 
     render() {
         const { classes } = this.props;
@@ -165,7 +164,6 @@ class Login extends Component<WithStyles & DispatchProps & StateProps & RouteCom
                         Submit
                     </Button>
                 </form>
-
             </div>
         );
     }

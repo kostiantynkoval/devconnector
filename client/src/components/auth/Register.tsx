@@ -83,7 +83,6 @@ class Register extends Component<WithStyles & DispatchProps & StateProps & Route
     }
 
     componentDidUpdate(a: any, b: any, snapshot: RegisterState | null) {
-        console.log('snapshot', snapshot)
         if(snapshot) {
             this.setState(snapshot)
         }

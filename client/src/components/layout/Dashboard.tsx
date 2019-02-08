@@ -22,35 +22,16 @@ const styles = createStyles({
     title: {
         marginTop: "20%",
         marginBottom: 0
-    },
-    subtitle: {
-        color: '#fff'
-    },
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    button: {
-        marginRight: 26
     }
 });
 
-class Landing extends Component<WithStyles, {}> {
+class Dashboard extends Component<WithStyles, {}> {
 
     render() {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <h1 className={classes.title}>Developer Connector</h1>
-                <h5 className={classes.subtitle}>Create a developer portfolio, share posts and get help from other developers</h5>
-                <div>
-                    <Button variant="contained" className={classes.button}>
-                        Sign Up
-                    </Button>
-                    <Button variant="contained" color="primary">
-                        Login
-                    </Button>
-                </div>
+                <h1 className={classes.title}>Developer Connector Dashboard</h1>
             </div>
         );
     }
@@ -62,5 +43,5 @@ class Landing extends Component<WithStyles, {}> {
 //
 // export default connect(
 //     mapStateToProps,
-// )(Landing);
-export default withStyles(styles)(Landing);
+// )(Dashboard);
+export default withStyles(styles)(Dashboard);

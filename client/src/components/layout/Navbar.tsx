@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
@@ -8,12 +8,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import {LOGOUT} from "../../store/actionTypes";
 
 const styles = createStyles({
-    root: {
-        //flexGrow: 1,
-    },
     grow: {
         flexGrow: 1,
     },
@@ -30,37 +30,62 @@ const styles = createStyles({
     }
 });
 
-class Navbar extends Component<RouteComponentProps & WithStyles, {}> {
+class Navbar extends Component<RouteComponentProps & WithStyles & DispatchProps & StateProps, {}> {
 
     pushTo = (to: string) => {
-        const { history, location } = this.props;
-        if(location.pathname === to) return;
+        const { history } = this.props;
+        if(history.location.pathname === to) return;
         history.push(to);
     }
 
-    render() {;
-        const {classes} = this.props;
+    logout = () => {
+        localStorage.removeItem('token');
+        this.props.logout(this.props.history);
+    }
+
+    render() {
+        const {classes, isAuthenticated, user} = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography onClick={() => this.pushTo("/")} variant="h5" color="inherit" className={classes.title}>
-                            DevConnector
-                        </Typography>
-                        <Button color="inherit" className={classes.menuItem}>Menu1</Button>
-                        <Button color="inherit" className={classes.menuItem}>Menu2</Button>
-                        <div className={classes.grow}/>
-                        <Button onClick={() => this.pushTo("/register")} color="inherit" className={classes.button}>Register</Button>
-                        <Button onClick={() => this.pushTo("/login")} color="inherit" className={classes.button}>Login</Button>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography onClick={() => this.pushTo("/")} variant="h5" color="inherit" className={classes.title}>
+                        DevConnector
+                    </Typography>
+
+                    {
+                        isAuthenticated && (
+                            <Fragment>
+                                <Button onClick={() => this.pushTo("/")} color="inherit" className={classes.menuItem}>Home</Button>
+                                <Button onClick={() => this.pushTo("/dashboard")} color="inherit" className={classes.menuItem}>Dashboard</Button>
+                            </Fragment>
+                        )
+                    }
+
+                    <div className={classes.grow}/>
+
+                    {isAuthenticated ? (
+                        <Fragment>
+                            <Tooltip title="You should have gravatar account connected to your email to see the image">
+                                <Avatar alt={user.name} src={user.avatar} />
+                            </Tooltip>
+                            <Button onClick={this.logout} color="inherit" className={classes.button}>Logout</Button>
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            <Button onClick={() => this.pushTo("/register")} color="inherit" className={classes.button}>Register</Button>
+                            <Button onClick={() => this.pushTo("/login")} color="inherit" className={classes.button}>Login</Button>
+                        </Fragment>
+                    )}
+
+                </Toolbar>
+            </AppBar>
         );
     }
 }
 
 const mapStateToProps = (state: any) => ({
-    auth: state.auth
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
 })
 
 const dispatchStateToProps = (dispatch: any): DispatchProps => ({
@@ -71,9 +96,10 @@ interface DispatchProps {
     logout: (history: any) => void
 }
 
-// interface StateProps {
-//     errors: RegistrationData
-// }
+interface StateProps {
+    isAuthenticated: boolean,
+    user: any //TODO Make user interface
+}
 
 export default connect(
     mapStateToProps,
